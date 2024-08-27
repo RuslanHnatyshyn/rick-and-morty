@@ -1,94 +1,131 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 
+const defaultEndpoint = "https://rickandmortyapi.com/api/character/";
+
 export default function Home() {
+  const [characters, setCharacters] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const pagesPerGroup = 10;
+  const [currentGroup, setCurrentGroup] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      const endpoint = searchQuery
+        ? `${defaultEndpoint}?page=${page}&name=${searchQuery}`
+        : `${defaultEndpoint}?page=${page}`;
+
+      const res = await fetch(
+        `${defaultEndpoint}?page=${page}&name=${searchQuery}`
+      );
+      const data = await res.json();
+
+      if (data.results) {
+        setCharacters(data.results);
+        setTotalPages(data.info.pages);
+      } else {
+        setCharacters([]);
+        setTotalPages(1);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [page, searchQuery]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handlePreviousGroup = () => {
+    setCurrentGroup((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleNextGroup = () => {
+    setCurrentGroup((prev) =>
+      Math.min(prev + 1, Math.floor(totalPages / pagesPerGroup))
+    );
+  };
+
+  const startPage = currentGroup * pagesPerGroup + 1;
+  const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, index) => startPage + index
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setPage(1);
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <h1>Rick and Morty Characters</h1>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search characters..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className={styles.search}
         />
+        <button className={styles.searchButton}>Search</button>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className={styles.list}>
+          {characters.length > 0 ? (
+            characters.map((character) => (
+              <li className={styles.card} key={character.id}>
+                <Link  href={`/character/${character.id}`}>
+                  <h2>{character.name}</h2>
+                </Link>
+                <img src={character.image} alt={character.name} />
+                <p>
+                  {character.status} - {character.species}
+                </p>
+                <p>
+                  <strong>Last known location:</strong>{" "}
+                  {character.location.name}
+                </p>
+                <p>
+                  <strong>First seen in:</strong> {character.origin.name}
+                </p>
+              </li>
+            ))
+          ) : (
+            <p>No characters found.</p>
+          )}
+        </ul>
+      )}
+      <div className={styles.pagination}>
+        <button onClick={handlePreviousGroup} disabled={currentGroup === 0}>
+          Previous
+        </button>
+        {pageNumbers.map((pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => handlePageChange(pageNum)}
+            disabled={page === pageNum}
+          >
+            {pageNum}
+          </button>
+        ))}
+        <button onClick={handleNextGroup} disabled={endPage === totalPages}>
+          Next
+        </button>
       </div>
     </main>
   );
