@@ -71,7 +71,17 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <h1>Rick and Morty Characters</h1>
+      <h1 className={styles.title}>Rick and Morty Characters</h1>
+
+      <div className={styles.links}>
+        <Link className={styles.episodes} href="/episodes">
+          Episodes
+        </Link>
+        <Link className={styles.locations} href="/locations">
+          Locations
+        </Link>
+      </div>
+
       <div className={styles.searchContainer}>
         <input
           type="text"
@@ -82,6 +92,7 @@ export default function Home() {
         />
         <button className={styles.searchButton}>Search</button>
       </div>
+
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -89,20 +100,27 @@ export default function Home() {
           {characters.length > 0 ? (
             characters.map((character) => (
               <li className={styles.card} key={character.id}>
-                <Link  href={`/character/${character.id}`}>
-                  <h2>{character.name}</h2>
-                </Link>
-                <img src={character.image} alt={character.name} />
-                <p>
-                  {character.status} - {character.species}
-                </p>
-                <p>
-                  <strong>Last known location:</strong>{" "}
-                  {character.location.name}
-                </p>
-                <p>
-                  <strong>First seen in:</strong> {character.origin.name}
-                </p>
+                <img
+                  className={styles.cardImg}
+                  src={character.image}
+                  alt={character.name}
+                />
+
+                <div className={styles.cardText}>
+                  <Link href={`/character/${character.id}`}>
+                    <h2>{character.name}</h2>
+                  </Link>
+                  <p>
+                    {character.status} - {character.species}
+                  </p>
+                  <p>
+                    <strong>Last known location:</strong>{" "}
+                    {character.location.name}
+                  </p>
+                  <p>
+                    <strong>First seen in:</strong> {character.origin.name}
+                  </p>
+                </div>
               </li>
             ))
           ) : (
@@ -110,6 +128,7 @@ export default function Home() {
           )}
         </ul>
       )}
+
       <div className={styles.pagination}>
         <button onClick={handlePreviousGroup} disabled={currentGroup === 0}>
           Previous
