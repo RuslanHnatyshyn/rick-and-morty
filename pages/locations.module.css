@@ -1,0 +1,42 @@
+.locationsBody {
+ font-family: Arial, Helvetica, sans-serif; 
+ padding: 10px;
+}
+
+.locationsTitle {
+  text-align: center;
+  font-size: 70px;
+}
+
+.locationsList {
+  margin-top: 20px;
+  list-style: none;
+  font-size: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  gap: 15px;
+}
+
+.locationsItem {
+  color: green;
+}
+
+.locationsLink {
+  text-decoration: none;
+  color: green;
+}
+
+.episodesBack {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.episodesBackLink {
+  text-decoration: none;
+  color: white;
+  background-color: green;
+  padding: 10px 20px;
+  border-radius: 8px;
+}

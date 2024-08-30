@@ -1,0 +1,38 @@
+.episodesBody {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px;
+}
+
+.episodesTitle {
+  text-align: center;
+  font-size: 70px;
+}
+
+.episodesList {
+  margin-top: 30px;
+  list-style: none;
+  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+}
+
+.episodesLink {
+  font-size: 22px;
+  text-decoration: none;
+  color: green;
+}
+
+.episodesBack {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
+
+.episodesBackLink {
+  text-decoration: none;
+  color: white;
+  background-color: green;
+  padding: 10px 20px;
+  border-radius: 8px;
+}

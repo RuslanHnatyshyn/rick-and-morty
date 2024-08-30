@@ -1,5 +1,6 @@
-// pages/location/[id]/index.js
-import Link from 'next/link';
+import Link from "next/link";
+import styles from "./index.module.css";
+import "../../../app/globals.css";
 
 export async function getServerSideProps({ params }) {
   const { id } = params;
@@ -21,20 +22,19 @@ export async function getServerSideProps({ params }) {
 
 export default function Location({ location, residents }) {
   return (
-    <main>
-      <h1>{location.name}</h1>
-      <h2>Residents:</h2>
-      <ul>
+    <main className={ styles.locationBody}>
+      <h1 className={ styles.locationTitle1}>{location.name}</h1>
+      <h2 className={ styles.locationTitle2}>Residents:</h2>
+      <ul className={styles.locationList}>
+        
         {residents.map((character) => (
-          <li key={character.id}>
-            <Link href={`/character/${character.id}`}>
-              {character.name}
-            </Link>
+          <li className={ styles.locationItem} key={character.id}>
+            <Link className={ styles.locationLink} href={`/character/${character.id}`}>{character.name}</Link>
           </li>
         ))}
       </ul>
-      <p>
-        <Link href="/locations">Back to All Locations</Link>
+      <p className={ styles.locationBack}>
+        <Link className={ styles.locationLinkBack} href="/locations">Back to All Locations</Link>
       </p>
     </main>
   );

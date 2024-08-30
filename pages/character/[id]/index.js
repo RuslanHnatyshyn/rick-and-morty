@@ -1,5 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
+import styles from "./index.module.css";
+import "../../../app/globals.css";
 
 export async function getServerSideProps({ params }) {
   const { id } = params;
@@ -13,19 +15,20 @@ export default function Character({ data = {} }) {
   const { name, image, gender, location, origin, species, status } = data;
 
   return (
-    <div className="container">
+    <div className={styles.cardBody}>
       <Head>
         <title>{name} - Rick and Morty</title>
       </Head>
+
       <main>
-        <h1>{name}</h1>
-        <div className="profile">
-          <div className="profile-image">
-            <img src={image} alt={name} />
+        <div className={styles.card}>
+          <div className={styles.cardImg}>
+            <img className={ styles.img} src={image} alt={name} />
           </div>
-          <div className="profile-details">
+          <div className={ styles.details}>
+            <h1>{name}</h1>
             <h2>Character Details</h2>
-            <ul>
+            <ul className={ styles.list}>
               <li>
                 <strong>Name:</strong> {name}
               </li>
@@ -48,10 +51,10 @@ export default function Character({ data = {} }) {
           </div>
         </div>
       </main>
-      <p className="back">
-        <Link href="/">Back to All Characters</Link>
+      
+      <p >
+        <Link className={ styles.back} href="/">Back to All Characters</Link>
       </p>
     </div>
   );
 }
-//index.js

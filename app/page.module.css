@@ -4,6 +4,7 @@
 
 .title {
  text-align: center;
+ font-size: 50px;
 }
 
 .links {
@@ -29,7 +30,6 @@
 
 .search {
   padding: 10px;
-  /* margin-bottom: 20px; */
   width: 100%;
   max-width: 300px;
   font-size: 16px;
